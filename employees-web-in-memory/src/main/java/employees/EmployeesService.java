@@ -24,5 +24,11 @@ public class EmployeesService {
     private EmployeeResource toResource(Employee employee) {
         return new EmployeeResource(employee.getId(), employee.getName());
     }
-    
+
+    public Mono<EmployeeResource> createEmployee(Mono<EmployeeResource> employeeResource) {
+        return employeeResource
+                .map(resource -> new Employee(resource.getName()))
+                .flatMap(employeeRepository::save)
+                .map(this::toResource);
+    }
 }
