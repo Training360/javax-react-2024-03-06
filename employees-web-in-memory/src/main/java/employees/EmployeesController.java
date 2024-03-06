@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.net.URI;
+
 @RestController
 @RequestMapping("/api/employees")
 @AllArgsConstructor
@@ -27,7 +29,9 @@ public class EmployeesController {
     }
 
     @PostMapping
-    public Mono<EmployeeResource> createEmployee(@RequestBody Mono<EmployeeResource> employeeResource) {
-        return employeesService.createEmployee(employeeResource);
+    public Mono<ResponseEntity<EmployeeResource>> createEmployee(@RequestBody Mono<EmployeeResource> employeeResource) {
+        return employeesService
+                .createEmployee(employeeResource)
+                .map(e -> ResponseEntity.created(URI.create("/api/employees/%d".formatted(e.getId()))).body(e));
     }
 }
