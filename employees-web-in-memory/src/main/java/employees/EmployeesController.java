@@ -1,6 +1,7 @@
 package employees;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +22,10 @@ public class EmployeesController {
     }
 
     @GetMapping("/{id}")
-    public Mono<EmployeeResource> findEmployeeById(@PathVariable("id") long id) {
-        return employeesService.findEmployeeById(id);
+    public Mono<ResponseEntity<EmployeeResource>> findEmployeeById(@PathVariable("id") long id) {
+        return employeesService
+                .findEmployeeById(id)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 }
