@@ -1,5 +1,6 @@
 package employees;
 
+import io.reactivex.rxjava3.core.Flowable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -61,6 +62,21 @@ public class EmployeesMain {
 
                 .subscribe(System.out::println);
 
+
+        Flowable.just(new Employee(1L, "John Doe", List.of("java")),
+                        new Employee(2L, "Jane Doe", List.of("java", "python")),
+                        new Employee(3L, "Jack Doe", List.of("java", "c#")))
+//                .doOnNext(e -> System.out.println(e))
+                .filter(e -> e.getId() > 1)
+//                .map(Employee::getName)
+//                .log()
+                .flatMap(e -> Flux.fromIterable(e.getSkills()))
+                .subscribe(System.out::println);
+        ;
+
+        Flux.from(Flowable.just(1, 2, 3).filter(i -> i > 1))
+                .map(i -> i * 2)
+                .subscribe(System.out::println);
 
     }
 }
