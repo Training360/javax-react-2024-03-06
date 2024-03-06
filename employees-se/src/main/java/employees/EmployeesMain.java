@@ -27,5 +27,40 @@ public class EmployeesMain {
 //                .subscribe(i -> System.out.println(i));
 
 
+        Flux.just(new Employee(1L, "John Doe", List.of("java")),
+                new Employee(2L, "Jane Doe", List.of("java", "python")),
+                new Employee(3L, "Jack Doe", List.of("java", "c#")))
+//                .doOnNext(e -> System.out.println(e))
+                .filter(e -> e.getId() > 1)
+//                .map(Employee::getName)
+//                .log()
+                .flatMap(e -> Flux.fromIterable(e.getSkills()))
+                .subscribe(System.out::println);
+        ;
+
+        Flux.range(0, 10)
+                .subscribe(System.out::println);
+
+        List<Integer> list =
+            Flux.range(0, 10)
+                    .skip(2) // skip()
+                    .take(3) // limit()
+                .collectList().block();
+
+        System.out.println(list);
+
+        Flux.just(new Employee(1L, "Joe", List.of()),
+                new Employee(2L, "Joe Joe Joe Joe Joe Joe Joe Joe", List.of())
+                        )
+                .map(e -> e.subName(10, 15))
+//                .doOnError(t -> t.printStackTrace())
+//                .onErrorReturn("unknown")
+                //.onErrorResume(t -> Mono.just("unknown"))
+                .onErrorContinue((t, e) -> System.out.println("unknown"))
+//                .onErrorReturn("unknown")
+
+                .subscribe(System.out::println);
+
+
     }
 }
