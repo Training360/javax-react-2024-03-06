@@ -1,5 +1,6 @@
 package employees;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,18 +10,18 @@ import reactor.core.publisher.Mono;
 
 @RestController
 @RequestMapping("/api/employees")
+@AllArgsConstructor
 public class EmployeesController {
+
+    private EmployeesService employeesService;
 
     @GetMapping
     public Flux<EmployeeResource> employees() {
-        return Flux.just(
-                new EmployeeResource(1L, "John Doe"),
-                new EmployeeResource(2L, "Jane Doe")
-                );
+        return employeesService.listEmployees();
     }
 
     @GetMapping("/{id}")
     public Mono<EmployeeResource> findEmployeeById(@PathVariable("id") long id) {
-        return Mono.just(new EmployeeResource(id, "Jack Doe"));
+        return employeesService.findEmployeeById(id);
     }
 }
