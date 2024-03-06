@@ -14,3 +14,14 @@ Content-Type: application/json
 {
   "name": "Jack Doe"
 }
+
+### Update
+PUT http://localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "name": "Jack Doe"
+}
+
+### Delete
+DELETE http://localhost:8080/api/employees/1

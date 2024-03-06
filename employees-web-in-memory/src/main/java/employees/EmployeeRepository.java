@@ -30,8 +30,20 @@ public class EmployeeRepository {
     }
 
     public Mono<Employee> save(Employee employee) {
-        return Mono.just(employee)
-                .doOnNext(e -> e.setId(sequenceGenerator.incrementAndGet())) // Nincs mellékhatás
-                .doOnNext(employees::add); // Van mellékhatás, kerüljük
+        if (employee.getId() == null) {
+            return Mono.just(employee)
+                    .doOnNext(e -> e.setId(sequenceGenerator.incrementAndGet())) // Nincs mellékhatás
+                    .doOnNext(employees::add); // Van mellékhatás, kerüljük
+        }
+        else {
+//            return findById(employee.getId())
+//                    .doOnNext(e -> e.setName(employee.getName()));
+            return Mono.just(employee);
+        }
+    }
+
+    public Mono<Void> deleteById(long id) {
+        employees.removeIf(e -> e.getId() == id);
+        return Mono.empty();
     }
 }
