@@ -9,13 +9,14 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.net.URI;
+import java.util.Optional;
 
 @ControllerAdvice
 public class ValidationExceptionHandler {
 
     @ExceptionHandler
-    public Mono<ProblemDetail> handle(WebExchangeBindException exception) {
-        return Mono.just(exception)
+    public ProblemDetail handle(WebExchangeBindException exception) {
+        return Optional.of(exception).stream()
                 .map(e -> {
                     // e.getMessage()
                     var problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Validation error");
@@ -35,7 +36,7 @@ public class ValidationExceptionHandler {
 
                     return problem;
                         }
-                        );
+                        ).findAny().orElseThrow();
     }
 
 
