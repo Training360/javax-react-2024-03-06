@@ -3,6 +3,7 @@ package employees;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -32,12 +33,15 @@ public class EmployeesService {
         return new EmployeeResource(employee.getId(), employee.getName());
     }
 
+//    @Transactional
     public Mono<EmployeeResource> createEmployee(Mono<EmployeeResource> employeeResource) {
         return employeeResource
                 .doOnNext(this::validate)
                 .map(resource -> new Employee(resource.getName()))
                 .flatMap(employeeRepository::save)
-                .map(this::toResource);
+                .map(this::toResource)
+//                .map(e -> {throw new IllegalStateException("Testing transactional");})
+                ;
     }
 
     public void validate(EmployeeResource employeeResource) {
