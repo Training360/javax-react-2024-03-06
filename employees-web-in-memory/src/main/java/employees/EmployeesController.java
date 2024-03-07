@@ -10,7 +10,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 
-@RestController
+//@RestController
 @RequestMapping("/api/employees")
 @AllArgsConstructor
 public class EmployeesController {
