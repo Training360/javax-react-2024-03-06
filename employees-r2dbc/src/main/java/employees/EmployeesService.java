@@ -14,13 +14,15 @@ public class EmployeesService {
     private EmployeeRepository employeeRepository;
 
     public Flux<EmployeeResource> listEmployees() {
-        return employeeRepository.findAll()
-                .map(this::toResource);
+//        return employeeRepository.findAll()
+//                .map(this::toResource);
+        return employeeRepository.findAllResources();
     }
 
     public Mono<EmployeeResource> findEmployeeById(long id) {
-        return employeeRepository.findById(id)
-                .map(this::toResource);
+//        return employeeRepository.findById(id)
+//                .map(this::toResource);
+        return employeeRepository.findResourceById(id);
     }
 
     private EmployeeResource toResource(Employee employee) {
