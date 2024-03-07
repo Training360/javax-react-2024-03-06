@@ -1,14 +1,14 @@
 package employees;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
+@Slf4j
 public class EmployeesService {
 
     private EmployeeRepository employeeRepository;
@@ -16,13 +16,16 @@ public class EmployeesService {
     public Flux<EmployeeResource> listEmployees() {
 //        return employeeRepository.findAll()
 //                .map(this::toResource);
-        return employeeRepository.findAllResources();
+        return employeeRepository.findAllBy();
     }
 
     public Mono<EmployeeResource> findEmployeeById(long id) {
 //        return employeeRepository.findById(id)
 //                .map(this::toResource);
-        return employeeRepository.findResourceById(id);
+        return employeeRepository
+                .findResourceById(id)
+                .doOnNext(e -> log.info("Query: {}", e))
+                ;
     }
 
     private EmployeeResource toResource(Employee employee) {
