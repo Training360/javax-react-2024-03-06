@@ -39,10 +39,10 @@ public class ValidationExceptionHandler {
                         }
                         ).findAny().orElseThrow();
     }
-    @ExceptionHandler
-    public ProblemDetail handleIllegalStateException(IllegalStateException illegalStateException) {
-        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Short name");
-    }
+//    @ExceptionHandler
+//    public ProblemDetail handleIllegalStateException(IllegalStateException illegalStateException) {
+//        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Short name");
+//    }
 
     @ExceptionHandler
     public ProblemDetail handle(ConstraintViolationException exception) {
