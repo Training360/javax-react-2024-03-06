@@ -1,5 +1,7 @@
 package employees;
 
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,8 @@ import java.net.URI;
 public class EmployeeHandler {
 
     private EmployeesService employeesService;
+
+    private Validator validator;
 
     @Bean
     public RouterFunction<ServerResponse> route() {
@@ -37,12 +41,23 @@ public class EmployeeHandler {
     }
 
     public Mono<ServerResponse> createEmployee(ServerRequest request) {
-        return employeesService.createEmployee(request.bodyToMono(EmployeeResource.class))
+        return employeesService.createEmployee(
+                request.bodyToMono(EmployeeResource.class)
+                        .doOnNext(this::validate)
+                )
                 .flatMap(employee ->
                         ServerResponse
                                 .created(URI.create(String.format("/api/employees/%d", employee.getId())))
                                 .bodyValue(employee));
     }
+
+    private void validate(EmployeeResource employeeResource) {
+        var violations = validator.validate(employeeResource);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+    }
+
     public Mono<ServerResponse> updateEmployee(ServerRequest request) {
         return ServerResponse.ok()
                 .body(
