@@ -29,9 +29,16 @@ public class EmployeesService {
 
     public Mono<EmployeeResource> createEmployee(Mono<EmployeeResource> employeeResource) {
         return employeeResource
+                .doOnNext(this::validate)
                 .map(resource -> new Employee(resource.getName()))
                 .flatMap(employeeRepository::save)
                 .map(this::toResource);
+    }
+
+    public void validate(EmployeeResource employeeResource) {
+        if (employeeResource.getName().length() < 2) {
+            throw new IllegalStateException("Short name");
+        }
     }
 
 //    public Mono<EmployeeResource> updateEmployee(long id, Mono<EmployeeResource> employeeResource) {
