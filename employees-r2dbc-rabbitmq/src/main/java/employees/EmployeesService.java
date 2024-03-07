@@ -17,6 +17,8 @@ public class EmployeesService {
 
     private EmployeeRepository employeeRepository;
 
+    private RabbitMqSender rabbitMqSender;
+
     public Flux<EmployeeResource> listEmployees() {
 //        return employeeRepository.findAll()
 //                .map(this::toResource);
@@ -48,6 +50,7 @@ public class EmployeesService {
                 .map(resource -> new Employee(resource.getName()))
                 .flatMap(employeeRepository::save)
                 .map(this::toResource)
+                .flatMap(e -> rabbitMqSender.sendMessage(Mono.just(e)).thenReturn(e))
 //                .map(e -> {throw new IllegalStateException("Testing transactional");})
                 ;
     }
