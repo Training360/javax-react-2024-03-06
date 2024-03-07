@@ -24,7 +24,7 @@ public class CounterController {
         return Flux.range(1, 10)
                 .delayElements(Duration.ofSeconds(2))
                 .map(i -> "John Doe " + i)
-                .map(s -> new EmployeeResource(0L, s))
+                .map(s -> new EmployeeResource("abcd", s))
                 .map(e -> {
                     try {
                         return objectMapper.writeValueAsString(e);

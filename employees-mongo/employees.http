@@ -2,7 +2,7 @@
 GET http://localhost:8080/api/employees
 
 ### Find employee by id
-GET http://localhost:8080/api/employees/1
+GET http://localhost:8080/api/employees/65e71843b65f99102cbc1252
 
 ### Find employee by id, not found
 GET http://localhost:8080/api/employees/5
@@ -24,7 +24,7 @@ Content-Type: application/json
 }
 
 ### Update
-PUT http://localhost:8080/api/employees/1
+PUT http://localhost:8080/api/employees/65e71843b65f99102cbc1252
 Content-Type: application/json
 
 {
@@ -32,4 +32,4 @@ Content-Type: application/json
 }
 
 ### Delete
-DELETE http://localhost:8080/api/employees/1
+DELETE http://localhost:8080/api/employees/65e71843b65f99102cbc1252

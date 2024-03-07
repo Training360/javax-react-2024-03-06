@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EmployeeResource {
 
-    private Long id;
+    private String id;
 
     @NotBlank
     private String name;

@@ -15,18 +15,18 @@ public class EmployeesService {
     private EmployeeRepository employeeRepository;
 
     public Flux<EmployeeResource> listEmployees() {
-//        return employeeRepository.findAll()
-//                .map(this::toResource);
-        return employeeRepository.findAllBy();
+        return employeeRepository.findAll()
+                .map(this::toResource);
+//        return employeeRepository.findAllBy();
     }
 
-    public Mono<EmployeeResource> findEmployeeById(long id) {
-//        return employeeRepository.findById(id)
-//                .map(this::toResource);
-        return employeeRepository
-                .findResourceById(id)
-                .doOnNext(e -> log.info("Query: {}", e))
-                ;
+    public Mono<EmployeeResource> findEmployeeById(String id) {
+        return employeeRepository.findById(id)
+                .map(this::toResource);
+//        return employeeRepository
+//                .findResourceById(id)
+//                .doOnNext(e -> log.info("Query: {}", e))
+//                ;
     }
 
     private EmployeeResource toResource(Employee employee) {
@@ -59,14 +59,14 @@ public class EmployeesService {
 //                .map(this::toResource);
 //    }
 
-public Mono<EmployeeResource> updateEmployee(long id, EmployeeResource employeeResource) {
+public Mono<EmployeeResource> updateEmployee(String id, EmployeeResource employeeResource) {
     return employeeRepository.findById(id)
             .doOnNext(employee -> employee.setName(employeeResource.getName()))
             .flatMap(employee -> employeeRepository.save(employee))
             .map(this::toResource);
 }
 
-    public Mono<Void> deleteEmployee(long id) {
+    public Mono<Void> deleteEmployee(String id) {
         return employeeRepository.deleteById(id);
     }
 }

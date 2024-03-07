@@ -35,7 +35,7 @@ public class EmployeeHandler {
     }
 
     public Mono<ServerResponse> findEmployeeById(ServerRequest serverRequest) {
-        return employeesService.findEmployeeById(Long.parseLong(serverRequest.pathVariable("id")))
+        return employeesService.findEmployeeById(serverRequest.pathVariable("id"))
                 .flatMap(e -> ServerResponse.ok().bodyValue(e))
                 .switchIfEmpty(ServerResponse.notFound().build());
 
@@ -51,7 +51,7 @@ public class EmployeeHandler {
                 )
                 .flatMap(employee ->
                         ServerResponse
-                                .created(URI.create(String.format("/api/employees/%d", employee.getId())))
+                                .created(URI.create(String.format("/api/employees/%s", employee.getId())))
                                 .bodyValue(employee));
     }
 
@@ -67,12 +67,12 @@ public class EmployeeHandler {
                 .body(
                         request.bodyToMono(EmployeeResource.class)
                                         .flatMap(e -> employeesService.updateEmployee(
-                                                Long.parseLong(request.pathVariable("id")),
+                                                request.pathVariable("id"),
                                                 e)), EmployeeResource.class).switchIfEmpty(ServerResponse.notFound().build());
     }
     public Mono<ServerResponse> deleteEmployee(ServerRequest request) {
         return employeesService
-                .deleteEmployee(Long.parseLong(request.pathVariable("id")))
+                .deleteEmployee(request.pathVariable("id"))
                 .then(ServerResponse.noContent().build());
     }
 

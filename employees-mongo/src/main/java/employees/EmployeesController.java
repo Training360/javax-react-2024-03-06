@@ -23,7 +23,7 @@ public class EmployeesController {
     }
 
     @GetMapping("/{id}")
-    public Mono<ResponseEntity<EmployeeResource>> findEmployeeById(@PathVariable("id") long id) {
+    public Mono<ResponseEntity<EmployeeResource>> findEmployeeById(@PathVariable("id") String id) {
         return employeesService
                 .findEmployeeById(id)
                 .map(ResponseEntity::ok)
@@ -34,11 +34,11 @@ public class EmployeesController {
     public Mono<ResponseEntity<EmployeeResource>> createEmployee(@Valid @RequestBody Mono<EmployeeResource> employeeResource) {
         return employeesService
                 .createEmployee(employeeResource)
-                .map(e -> ResponseEntity.created(URI.create("/api/employees/%d".formatted(e.getId()))).body(e));
+                .map(e -> ResponseEntity.created(URI.create("/api/employees/%s".formatted(e.getId()))).body(e));
     }
 
     @PutMapping("/{id}")
-    public Mono<ResponseEntity<EmployeeResource>> updateEmployee(@PathVariable("id") long id, @RequestBody EmployeeResource employeeResource) {
+    public Mono<ResponseEntity<EmployeeResource>> updateEmployee(@PathVariable("id") String id, @RequestBody EmployeeResource employeeResource) {
         return employeesService.updateEmployee(id, employeeResource)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.notFound().build());
@@ -46,7 +46,7 @@ public class EmployeesController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public Mono<Void> deleteEmployee(@PathVariable("id") long id) {
+    public Mono<Void> deleteEmployee(@PathVariable("id") String id) {
         return employeesService.deleteEmployee(id);
     }
 }
