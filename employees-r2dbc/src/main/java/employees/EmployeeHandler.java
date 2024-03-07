@@ -35,9 +35,13 @@ public class EmployeeHandler {
     }
 
     public Mono<ServerResponse> findEmployeeById(ServerRequest serverRequest) {
-        return ServerResponse.ok()
-                .body(employeesService.findEmployeeById(Long.parseLong(serverRequest.pathVariable("id"))), EmployeeResource.class)
+        return employeesService.findEmployeeById(Long.parseLong(serverRequest.pathVariable("id")))
+                .flatMap(e -> ServerResponse.ok().body(e, EmployeeResource.class))
                 .switchIfEmpty(ServerResponse.notFound().build());
+
+//        return ServerResponse.ok()
+//                .body(employeesService.findEmployeeById(Long.parseLong(serverRequest.pathVariable("id"))), EmployeeResource.class)
+//                .switchIfEmpty(ServerResponse.notFound().build());
     }
 
     public Mono<ServerResponse> createEmployee(ServerRequest request) {
@@ -64,7 +68,7 @@ public class EmployeeHandler {
                         request.bodyToMono(EmployeeResource.class)
                                         .flatMap(e -> employeesService.updateEmployee(
                                                 Long.parseLong(request.pathVariable("id")),
-                                                e)), EmployeeResource.class);
+                                                e)), EmployeeResource.class).switchIfEmpty(ServerResponse.notFound().build());
     }
     public Mono<ServerResponse> deleteEmployee(ServerRequest request) {
         return employeesService
