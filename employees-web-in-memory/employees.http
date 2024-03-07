@@ -15,6 +15,14 @@ Content-Type: application/json
   "name": "Jack Doe"
 }
 
+### Create employee with validation
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "name": "  "
+}
+
 ### Update
 PUT http://localhost:8080/api/employees/1
 Content-Type: application/json

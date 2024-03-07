@@ -1,5 +1,6 @@
 package employees;
 
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +31,7 @@ public class EmployeesController {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<EmployeeResource>> createEmployee(@RequestBody Mono<EmployeeResource> employeeResource) {
+    public Mono<ResponseEntity<EmployeeResource>> createEmployee(@Valid @RequestBody Mono<EmployeeResource> employeeResource) {
         return employeesService
                 .createEmployee(employeeResource)
                 .map(e -> ResponseEntity.created(URI.create("/api/employees/%d".formatted(e.getId()))).body(e));
