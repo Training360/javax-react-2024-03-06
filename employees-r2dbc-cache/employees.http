@@ -1,0 +1,35 @@
+### List employees
+GET http://localhost:8080/api/employees
+
+### Find employee by id
+GET http://localhost:8080/api/employees/1
+
+### Find employee by id, not found
+GET http://localhost:8080/api/employees/5
+
+### Create employee
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "name": "Jack Doe"
+}
+
+### Create employee with validation
+POST http://localhost:8080/api/employees
+Content-Type: application/json
+
+{
+  "name": ""
+}
+
+### Update
+PUT http://localhost:8080/api/employees/1
+Content-Type: application/json
+
+{
+  "name": "Jane Doe"
+}
+
+### Delete
+DELETE http://localhost:8080/api/employees/1
