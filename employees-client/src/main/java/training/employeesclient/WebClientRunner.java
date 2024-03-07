@@ -6,7 +6,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Component
+//@Component
 @AllArgsConstructor
 @Slf4j
 public class WebClientRunner implements CommandLineRunner {
