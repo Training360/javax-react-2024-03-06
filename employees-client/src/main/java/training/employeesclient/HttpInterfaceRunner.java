@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 @Component
 @AllArgsConstructor
@@ -14,7 +15,12 @@ public class HttpInterfaceRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        var employees = employeeService.listEmployees().collectList().block();
-        log.info("Result: {}", employees);
+//        var employees = employeeService.listEmployees().collectList().block();
+//        log.info("Result: {}", employees);
+
+        Flux.just(14, 15, 16)
+                .flatMap(i -> employeeService.findEmployeeById(i))
+                .doOnNext(e -> log.info("Employee: {}", e))
+                .blockLast();
     }
 }

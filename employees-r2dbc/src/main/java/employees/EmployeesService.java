@@ -7,6 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.time.Duration;
+import java.util.Random;
+
 @Service
 @AllArgsConstructor
 @Slf4j
@@ -25,6 +28,11 @@ public class EmployeesService {
 //                .map(this::toResource);
         return employeeRepository
                 .findResourceById(id)
+
+                // Demó célzattal
+//                .delayElement(Duration.ofMillis(new Random().nextInt(3000)))
+//                .delayElement(Duration.ofMillis(3000))
+
                 .doOnNext(e -> log.info("Query: {}", e))
                 ;
     }
