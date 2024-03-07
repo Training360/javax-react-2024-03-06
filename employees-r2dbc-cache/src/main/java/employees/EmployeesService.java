@@ -2,6 +2,7 @@ package employees;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -14,6 +15,8 @@ public class EmployeesService {
 
     private EmployeeRepository employeeRepository;
 
+    private ReactiveRedisTemplate<Long, EmployeeResource> reactiveRedisTemplate;
+
     public Flux<EmployeeResource> listEmployees() {
 //        return employeeRepository.findAll()
 //                .map(this::toResource);
@@ -23,10 +26,16 @@ public class EmployeesService {
     public Mono<EmployeeResource> findEmployeeById(long id) {
 //        return employeeRepository.findById(id)
 //                .map(this::toResource);
-        return employeeRepository
-                .findResourceById(id)
-                .doOnNext(e -> log.info("Query: {}", e))
-                ;
+//        return employeeRepository
+//                .findResourceById(id)
+//                .doOnNext(e -> log.info("Query: {}", e))
+//                ;
+
+        return reactiveRedisTemplate.opsForValue().get(id)
+                .switchIfEmpty(employeeRepository
+                        .findResourceById(id)
+                        .flatMap(resource -> reactiveRedisTemplate.opsForValue().set(id, resource).thenReturn(resource))
+                );
     }
 
     private EmployeeResource toResource(Employee employee) {
