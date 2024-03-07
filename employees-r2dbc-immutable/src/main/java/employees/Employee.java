@@ -4,21 +4,9 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.PersistenceCreator;
 
-@Value
-@AllArgsConstructor(onConstructor_ = @PersistenceCreator)
-@With
-public class Employee {
+public record Employee(@Id Long id, String name) {
 
-    @Id
-    Long id;
-
-    String name;
-
-    public Employee(String name) {
-        this.id = null;
-        this.name = name;
+    public Employee( String name) {
+        this(null, name);
     }
-
-
-
 }

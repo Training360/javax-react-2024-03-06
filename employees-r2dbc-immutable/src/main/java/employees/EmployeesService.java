@@ -29,7 +29,7 @@ public class EmployeesService {
     }
 
     private EmployeeResource toResource(Employee employee) {
-        return new EmployeeResource(employee.getId(), employee.getName());
+        return new EmployeeResource(employee.id(), employee.name());
     }
 
     public Mono<EmployeeResource> createEmployee(Mono<EmployeeResource> employeeResource) {
@@ -58,7 +58,7 @@ public class EmployeesService {
 public Mono<EmployeeResource> updateEmployee(long id, EmployeeResource employeeResource) {
     return employeeRepository.findById(id)
 //            .doOnNext(employee -> employee.setName(employeeResource.getName()))
-            .map(e -> e.withName(employeeResource.getName()))
+            .map(e -> new Employee(e.id(), employeeResource.getName()))
             .flatMap(employee -> employeeRepository.save(employee))
             .map(this::toResource);
 }
