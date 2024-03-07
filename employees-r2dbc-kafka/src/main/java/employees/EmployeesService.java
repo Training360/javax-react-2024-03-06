@@ -2,6 +2,7 @@ package employees;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
@@ -16,6 +17,8 @@ import java.util.Random;
 public class EmployeesService {
 
     private EmployeeRepository employeeRepository;
+
+    private StreamBridge streamBridge;
 
     public Flux<EmployeeResource> listEmployees() {
 //        return employeeRepository.findAll()
@@ -48,6 +51,7 @@ public class EmployeesService {
                 .map(resource -> new Employee(resource.getName()))
                 .flatMap(employeeRepository::save)
                 .map(this::toResource)
+                .doOnNext(e -> streamBridge.send("employeesTopic", e))
 //                .map(e -> {throw new IllegalStateException("Testing transactional");})
                 ;
     }
