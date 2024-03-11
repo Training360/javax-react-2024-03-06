@@ -41,14 +41,14 @@ public class EmployeesService {
         return new EmployeeResource(employee.getId(), employee.getName());
     }
 
-//    @Transactional
+    @Transactional
     public Mono<EmployeeResource> createEmployee(Mono<EmployeeResource> employeeResource) {
         return employeeResource
                 .doOnNext(this::validate)
                 .map(resource -> new Employee(resource.getName()))
                 .flatMap(employeeRepository::save)
                 .map(this::toResource)
-//                .map(e -> {throw new IllegalStateException("Testing transactional");})
+                .handle((e, sink) -> sink.error(new IllegalStateException("Rollback")))
                 ;
     }
 
